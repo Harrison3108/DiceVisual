@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="const_button_size">90dp</dimen>
+    <dimen name="const_button_size_Landscape">70dp</dimen>
+</resources>
