@@ -1,4 +1,4 @@
-package com.example.dicevisual
+package com.example.dicevisual.Dice
 
 import kotlin.random.Random
 
@@ -11,17 +11,13 @@ import kotlin.random.Random
 * calculate() - Formats and Calculates the end string shown when the enter button is pressed
 * //TODO Split into two or more parts (First Half, Second Half [Add Dice Together, Multiply, Add/Subtract])
 * */
-fun calculate(input:String):String{
+
+fun parseInput(input:String):String{
 
     //First Half (Write Equation Out)
     var workingOut = ""
     var inputList = input.split(" ")
 
-    //Second Half (Actually Calculate using that Equation)
-    var result = 0
-    var addNext = true
-
-    //---------------------------------------------------------
     //First Half - Build String Equation properly formatted for rest of XXX
 
     //Roll Dice and Format correctly
@@ -35,7 +31,6 @@ fun calculate(input:String):String{
         } else if(i.contains("d")){
             //If a Dice
 
-            //TODO: Get "Xd" dice rolls working (Probably just the number "X" by dropping)
             var split = i.splitToSequence("d")
 
             //Add each dice roll in proper formatting
@@ -48,7 +43,15 @@ fun calculate(input:String):String{
         }else if(i.contains("-")){
             //If a "-"
             workingOut += " " + i + " "
-        }else{
+        }else if(i.contains("x")){
+            //If a "x" (Multiply)
+            workingOut += " " + i + " "
+        }else if(i.contains("/")){
+            //If a "/"
+            workingOut += " " + i + " "
+        }
+
+        else{
             //TODO: Add Multiplication support (Use AFTER Dice Roll, but BEFORE Addition or Subtraction. [Parser Function? Eg: Input -> parseDice() -> parseMultiply() -> parseBasic() -> Output?]
 
             //Something went wrong. Inform the user without crashing
@@ -59,12 +62,72 @@ fun calculate(input:String):String{
 
     }
 
+    return workingOut
+}
+
+fun bracketCalculation(input:String, level:Int): String{
+    //Level = Level of Brackets In
+    //input = FormattedInput
+    var currentLevel = 0
+
+    if(level > 0){
+        //
+        for(i in input.split(" ")){
+            //Check for Brackets
+            //input.get(i).
+
+            //
+            if(i.contains('[') || i.contains("(")){
+
+                //
+                if(currentLevel > 0){
+
+                }
+
+                currentLevel += 1
+
+            }
+
+            if(i.contains(']') || i.contains(")")){
+                //
+                if(currentLevel > 0){
+
+                }else{
+                    //MULTIPLY AND DIVIDE
+                }
+            }
+        }
+    }
+
+    //Returns FULL OUTPUT
+    return "OUTPUT"
+}
+
+fun multiplyAndDivide(input:String): String{
+
+    //
+    return "OUTPUT HERE"
+}
+
+fun calculate(input:String):String{
+
+    //First Half (Write Equation Out)
+    var formattedInput = parseInput(input)
+
+
+    //Second Half (Actually Calculate using that Equation)
+    var result = 0
+    var addNext = true
+
+    //---------------------------------------------------------
+
+
     //--------------------------------------------------------------
     // Second Half: Calculate
 
 
     //Complete the equation (Remove Dice Format)
-    for(i in workingOut.replace("[","").replace("]","").split(" ")){
+    for(i in formattedInput.replace("[","").replace("]","").split(" ")){
 
         //TODO: Add Multiplication support (Add Dice Results together, then Multiply, then add/subtract. Find better way to reduce for loops first)
 
@@ -92,7 +155,7 @@ fun calculate(input:String):String{
     }
 
     //Return Formatted Output
-    return result.toString() + ": " + workingOut
+    return result.toString() + ": " + formattedInput
 
 }
 

@@ -1,4 +1,4 @@
-package com.example.dicevisual
+package com.example.dicevisual.Dice
 
 class History(input: String,result: String,count:Int) {
     val input: String = input

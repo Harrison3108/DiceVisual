@@ -1,4 +1,4 @@
-package com.example.dicevisual
+package com.example.dicevisual.Dice
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.dicevisual.R
 
 
 class BasicDiceCalculator : AppCompatActivity() {
@@ -105,14 +106,20 @@ class BasicDiceCalculator : AppCompatActivity() {
         * */
         button_back.setOnClickListener {
 
-            //If there is text to remove
-            if(text_edit.length > 0){
-
-                //Remove Operator if true
-                if(operatorLast == true){
-                    text_edit = text_edit.dropLast(2) //TODO This dropLast Works, why not the others
-                    operatorLast = false
+            //Remove Operator if true
+            if(operatorLast == true){
+                //Check if your not at the start of the calculation
+                if(text_edit.length > 2) {
+                    text_edit = text_edit.dropLast(2)
+                }else{
+                    text_edit = ""
+                    id_text.text = "0"
                 }
+                operatorLast = false
+            }
+
+            //If there is text to remove
+            if(text_edit.length > 1){
 
                 //Drop last number
                 text_edit = text_edit.dropLast(1)
