@@ -4,21 +4,24 @@ import kotlin.random.Random
 
 /*
 * DiceCal.kt - Contains all of the maths calculations after pressing the "=" Button
+* Last Edit: Oct 14 2023
 * */
 
 
 /*
-* calculate() - Formats and Calculates the end string shown when the enter button is pressed
-* //TODO Split into two or more parts (First Half, Second Half [Add Dice Together, Multiply, Add/Subtract])
+* parseInput: Gives the correct spacing and Formatting for Dice Calculation
+* For an example, see the string after the ":" after a successful calculation
+* Eg: 23:-> [6,5,6,3,2] + 1
+*
+* - input: string from BasicDiceCalculator (Enter Button Press)
+*
+* Output: Formatted String with correct spacing and dice rolled
 * */
 
 fun parseInput(input:String):String{
 
-    //First Half (Write Equation Out)
     var workingOut = ""
-    var inputList = input.split(" ")
-
-    //First Half - Build String Equation properly formatted for rest of XXX
+    val inputList = input.split(" ")
 
     //Roll Dice and Format correctly
     for(i in inputList){
@@ -31,7 +34,7 @@ fun parseInput(input:String):String{
         } else if(i.contains("d")){
             //If a Dice
 
-            var split = i.splitToSequence("d")
+            val split = i.splitToSequence("d")
 
             //Add each dice roll in proper formatting
             workingOut += "[" + rollDice(split.first().toInt(), split.last().toInt()) + "]"
@@ -39,20 +42,19 @@ fun parseInput(input:String):String{
         } else if(i.contains("+")){
             //If a "+"
 
-            workingOut += " " + i + " "
+            workingOut += " $i "
         }else if(i.contains("-")){
             //If a "-"
-            workingOut += " " + i + " "
+            workingOut += " $i "
         }else if(i.contains("x")){
             //If a "x" (Multiply)
-            workingOut += " " + i + " "
+            workingOut += " $i "
         }else if(i.contains("/")){
             //If a "/"
-            workingOut += " " + i + " "
+            workingOut += " $i "
         }
 
         else{
-            //TODO: Add Multiplication support (Use AFTER Dice Roll, but BEFORE Addition or Subtraction. [Parser Function? Eg: Input -> parseDice() -> parseMultiply() -> parseBasic() -> Output?]
 
             //Something went wrong. Inform the user without crashing
             //val mainText = findViewById<TextView>(R.id.id_Test)
@@ -65,72 +67,194 @@ fun parseInput(input:String):String{
     return workingOut
 }
 
-fun bracketCalculation(input:String, level:Int): String{
-    //Level = Level of Brackets In
-    //input = FormattedInput
-    var currentLevel = 0
+/*
+* addDice: Takes the formatted string from start, and adds all rolled dice together here.
+* Allows Multiplication to work by multiplying result. Same with Division
+* - input: Formatted String from parseInput()
+*
+* Output: The Formatted String from parseInput(), but with the total dice rolled
+*         rather than the each individual dice rolled
+* */
+fun addDice(input:String):String{
+    var output = ""
+    var diceTotal = 0
 
-    if(level > 0){
-        //
-        for(i in input.split(" ")){
-            //Check for Brackets
-            //input.get(i).
+    var isDice = false
 
-            //
-            if(i.contains('[') || i.contains("(")){
+    val inputArray = input.split(" ")
 
-                //
-                if(currentLevel > 0){
+    for(i in inputArray.indices){
 
-                }
+        //Check if the Character has the Starting Bracket Sign
+        if(inputArray[i].contains('[')){
+            isDice = true
+        }
 
-                currentLevel += 1
-
+        //Check if you are within the square brackets []
+        if(isDice){
+            //Add all the rolls together
+            if(!inputArray[i].contains('+')) {
+                //Add Number without Dice Symbols
+                diceTotal += inputArray[i].replace("[", "").replace("]", "").toInt()
             }
 
-            if(i.contains(']') || i.contains(")")){
-                //
-                if(currentLevel > 0){
+        }else{
+            //Leave the input the same (No Dice Here)
 
+            //Check if Int or Operator
+            if(inputArray[i].toIntOrNull() != null){
+                //Add without Spaces
+                output += inputArray[i]
+            }else{
+                //Add WITH Spaces
+                output += " $inputArray[i] "
+                }
+        }
+
+        //Checks if you hit the last dice digit
+        if(inputArray[i].contains(']')){
+            isDice = false
+
+            //Add Final Result and reset
+            output += diceTotal
+            diceTotal = 0
+        }
+
+    }
+
+    return output
+}
+
+/*
+* multiplyAndDivide - Does DM in BODMAS; Division and Multiplication
+*  Assumes
+*   - TODO Proper Formatting (No Multiplication or Divide without numbers before and after operator)
+*   - TODO Brackets are dealt with
+*
+* TODO Add Support for more than one operation (eg: 4 x 3 / 2 BREAKS EVERYTHING)
+* */
+fun multiplyAndDivide(input:String): String{
+
+    val inputSplit = input.split(' ')
+
+    var output = ""
+
+    var doOperation = false
+    var isMultiply = true //True = Multiply; False = Divide
+    var afterOperation = false
+
+    var prevNum = 0.0
+
+    for(i in inputSplit.indices){
+        if(inputSplit[i].contains('x')){
+            //Prepare for Multiplication
+            doOperation = true
+            isMultiply = true
+        }else if(inputSplit[i].contains('/')){
+            //Prepare for Multiplication
+            doOperation = true
+            isMultiply = false
+        }else if(inputSplit[i].toIntOrNull() != null && doOperation){
+            //Do Calculation
+
+            //Get Previous Number
+            if((i - 2) >= 0){
+                //
+                val temp = output.split(" ")
+
+                //Checks if you have done a Multiply or Divide Before
+                if(afterOperation){
+                    //
+                    prevNum = temp.last().toDouble()
                 }else{
-                    //MULTIPLY AND DIVIDE
+
+                    //Works Fine
+                    prevNum = temp[i-2].toDouble()
+                    afterOperation = true
+
                 }
+
+                if(output.contains(' ')) {
+                    output = output.dropLast(temp.last().length)
+                }else{
+                    output = ""
+                }
+
+            }else{
+                prevNum = 0.0
             }
+
+            //Check which operator to use (NOTE: Tabletop games ALWAYS Round DOWN, hence why it is done here)
+            if(isMultiply){
+                val calculation = prevNum * inputSplit[i].toDouble()
+                output += calculation.toString().split(".").first() //Always Round Down in DND
+            }else{
+                val calculation = prevNum / inputSplit[i].toDouble()
+                output += calculation.toString().split(".").first() //Always Round Down in DND
+            }
+            //
+            doOperation = false
+        }else{
+            //
+            output += inputSplit[i]
+            afterOperation = false
         }
     }
 
-    //Returns FULL OUTPUT
-    return "OUTPUT"
-}
+    /*
 
-fun multiplyAndDivide(input:String): String{
+    for(i in inputSplit.indices){
+        //Skip first Num
 
+        if(isMultiply && inputSplit.get(i).toIntOrNull() != null){
+            firstNum = inputSplit.get(i-2)
+
+
+
+
+        }
+
+        if(inputSplit.get(i).contains('x') || inputSplit.get(i).contains('/') ){
+            if(inputSplit.get(i).contains('x') ){
+                isMultiply = true
+                isDivide = true
+            }else {
+                isDivide = true
+            }
+        }else{
+            //Is Number
+            if(inputSplit.get(i).toIntOrNull() != null){
+
+                //
+                output += inputSplit.get(i)
+                firstNum = inputSplit.get(i)
+            }else{
+                //Normal Operators
+                output += " " + inputSplit.get(i) + " "
+            }
+        }
+
+
+
+
+
+    }
+
+    */
     //
-    return "OUTPUT HERE"
+    return output
 }
 
-fun calculate(input:String):String{
-
-    //First Half (Write Equation Out)
-    var formattedInput = parseInput(input)
-
-
-    //Second Half (Actually Calculate using that Equation)
-    var result = 0
+/*
+* addAndSubtract: The final stage of adding and subtracting what is left
+* - input: String from multiplyAndDivide (Currently from addDice)
+*
+* Output: Final Result from the calculator
+* */
+fun addAndSubtract(input:String):Int{
     var addNext = true
-
-    //---------------------------------------------------------
-
-
-    //--------------------------------------------------------------
-    // Second Half: Calculate
-
-
-    //Complete the equation (Remove Dice Format)
-    for(i in formattedInput.replace("[","").replace("]","").split(" ")){
-
-        //TODO: Add Multiplication support (Add Dice Results together, then Multiply, then add/subtract. Find better way to reduce for loops first)
-
+    var result = 0
+    for(i in input.split(" ")){
         //Check if it is an Operator
         if(i.contains("+")){
             //Add Next Number from result
@@ -151,14 +275,35 @@ fun calculate(input:String):String{
                 result -= i.toInt()
             }
         }
-
     }
 
-    //Return Formatted Output
-    return result.toString() + ": " + formattedInput
+    return result
 
 }
 
+/*
+* calculate: Calls functions to format and calculate the equation, then pass result back to
+*            main code to be put into a history object.
+*
+* - input: Normal text from the Enter button on click function
+* Output: Formatted Result with "result: Formatted Input" Structure
+* */
+fun calculate(input:String):String{
+
+    //First Half (Write Equation Out)
+    val formattedInput = parseInput(input)
+
+
+    //Second Half (Actually Calculate using that Equation)
+    val result = addAndSubtract(addDice(formattedInput)) //TODO Add multiplyAndDivide when working
+
+    //Return Formatted Output
+    return "$result: $formattedInput"
+
+}
+
+//==================================================
+// Dice Functions
 
 /*
 * RollDice - Rolls dice given in tabletop format

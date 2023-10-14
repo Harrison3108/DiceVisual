@@ -50,7 +50,7 @@
                         android:padding="10dp"
                         android:text="Result"
                         android:textAlignment="textEnd"
-                        android:textSize="24sp" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/txtid_input"
@@ -59,7 +59,8 @@
                         android:gravity="right|center_vertical"
                         android:paddingEnd="10dp"
                         android:text="Input"
-                        android:textAlignment="textEnd" />
+                        android:textAlignment="textEnd"
+                        android:textSize="12sp" />
                 </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

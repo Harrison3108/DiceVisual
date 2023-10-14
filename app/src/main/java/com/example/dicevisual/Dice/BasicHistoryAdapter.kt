@@ -11,9 +11,9 @@ class BasicHistoryAdapter(private val lHistory: List<History>): RecyclerView.Ada
 
     //Get IDs for elements in history_item_simple.xml
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        val inputShown = itemView.findViewById<TextView>(R.id.txtid_input)
-        val resultShown = itemView.findViewById<TextView>(R.id.txtid_result)
-        val countShown = itemView.findViewById<TextView>(R.id.txtid_HistoryNum)
+        val inputShown = itemView.findViewById<TextView>(R.id.txtid_input)!!
+        val resultShown = itemView.findViewById<TextView>(R.id.txtid_result)!!
+        val countShown = itemView.findViewById<TextView>(R.id.txtid_HistoryNum)!!
     }
 
     //Allow the RecyclerView to be used with basic history items (history_item_simple.xml)
@@ -31,7 +31,7 @@ class BasicHistoryAdapter(private val lHistory: List<History>): RecyclerView.Ada
     //Visually update recyclerview item
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         //Get History List
-        val historyItem: History = lHistory.get(position)
+        val historyItem: History = lHistory[position]
 
         //----------------------------------------------
         //Update visually the history item

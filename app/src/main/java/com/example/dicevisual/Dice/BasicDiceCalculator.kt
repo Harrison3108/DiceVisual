@@ -25,12 +25,12 @@ class BasicDiceCalculator : AppCompatActivity() {
         ///Setting Defaults
 
         //Text that shows what you typed to get the result
-        var inputUsed = findViewById<TextView>(R.id.txtid_prevInput)
+        val inputUsed = findViewById<TextView>(R.id.txtid_prevInput)
         inputUsed.isVisible = false
 
         //Result Text
-        var id_text = findViewById<TextView>(R.id.id_Test)
-        id_text.text = "0"
+        val idText = findViewById<TextView>(R.id.id_Test)
+        idText.text = "0"
 
         //History
         val recycle = findViewById<RecyclerView>(R.id.rvid_history)
@@ -46,7 +46,7 @@ class BasicDiceCalculator : AppCompatActivity() {
         */
 
         //XXX
-        var text_edit = ""
+        var textEdit = ""
         var operatorLast = false
 
 
@@ -81,8 +81,8 @@ class BasicDiceCalculator : AppCompatActivity() {
         //Simplify Button Clicks involving numbers
         fun buttonClick (buttonNum: String){
             //Add Text to calculation and update shown text
-            text_edit += buttonNum
-            id_text.text = text_edit
+            textEdit += buttonNum
+            idText.text = textEdit
 
             //Tell that it is not an operator (For Back and Math Operator purposes)
             operatorLast = false
@@ -107,35 +107,35 @@ class BasicDiceCalculator : AppCompatActivity() {
         button_back.setOnClickListener {
 
             //Remove Operator if true
-            if(operatorLast == true){
+            if(operatorLast){
                 //Check if your not at the start of the calculation
-                if(text_edit.length > 2) {
-                    text_edit = text_edit.dropLast(2)
+                if(textEdit.length > 2) {
+                    textEdit = textEdit.dropLast(2)
                 }else{
-                    text_edit = ""
-                    id_text.text = "0"
+                    textEdit = ""
+                    idText.text = "0"
                 }
                 operatorLast = false
             }
 
             //If there is text to remove
-            if(text_edit.length > 1){
+            if(textEdit.length > 1){
 
                 //Drop last number
-                text_edit = text_edit.dropLast(1)
+                textEdit = textEdit.dropLast(1)
 
                 //Check if previous is operator
-                if (text_edit.last() == ' ') {
+                if (textEdit.last() == ' ') {
                     operatorLast = true
                 }
 
                 //Update Text
-                id_text.text = text_edit
+                idText.text = textEdit
 
             }else{
                 //If there is no text to remove
-                text_edit = ""
-                id_text.text = "0"
+                textEdit = ""
+                idText.text = "0"
 
             }
 
@@ -149,12 +149,12 @@ class BasicDiceCalculator : AppCompatActivity() {
         * */
         button_dice.setOnClickListener {
             //Check if there is NOT a number before the dice button
-            if(text_edit.length == 0 || operatorLast == true){
+            if(textEdit.isEmpty() || operatorLast){
                 //Adds one to indicate you want to roll the dice once
-                text_edit += "1"
+                textEdit += "1"
             }
-            text_edit += "d"
-            id_text.text = text_edit
+            textEdit += "d"
+            idText.text = textEdit
         }
 
         //-----------------------------------------------------------
@@ -163,23 +163,23 @@ class BasicDiceCalculator : AppCompatActivity() {
         * */
         button_add.setOnClickListener {
             //If there is an operator there already, prepare to replace it!
-            if(operatorLast == true){
-                text_edit = text_edit.dropLast(3)
+            if(operatorLast){
+                textEdit = textEdit.dropLast(3)
             }
 
             //Check if the sign is at the start
-            if(text_edit.length > 0) {
+            if(textEdit.isNotEmpty()) {
 
                 //Check if the previous character is the dice one, and removes it
-                if (text_edit.last() == 'd') {
-                    text_edit = text_edit.dropLast(1)
-                    id_text.text = text_edit
+                if (textEdit.last() == 'd') {
+                    textEdit = textEdit.dropLast(1)
+                    idText.text = textEdit
                 }
             }
 
             //Update Text Shown
-            text_edit += " + "
-            id_text.text = text_edit
+            textEdit += " + "
+            idText.text = textEdit
             operatorLast = true
         }
 
@@ -189,25 +189,25 @@ class BasicDiceCalculator : AppCompatActivity() {
         * */
         button_minus.setOnClickListener {
             //Check if the string has anything in it
-            if(text_edit.length > 0) {
+            if(textEdit.isNotEmpty()) {
 
                 //Check if the last character is 'd'
-                if (text_edit.last() == 'd') {
+                if (textEdit.last() == 'd') {
 
                     //Remove the dice indicator (As a Xd1 is just X)
-                    text_edit = text_edit.dropLast(1)
-                    id_text.text = text_edit
+                    textEdit = textEdit.dropLast(1)
+                    idText.text = textEdit
                 }
             }
 
             //Check if there was an operator used before it
-            if(operatorLast == true){
+            if(operatorLast){
                 //Remove it
-                text_edit = text_edit.dropLast(3)
+                textEdit = textEdit.dropLast(3)
             }
 
             //Add
-            text_edit += " - "; id_text.text = text_edit
+            textEdit += " - "; idText.text = textEdit
             operatorLast = true
         }
 
@@ -215,7 +215,7 @@ class BasicDiceCalculator : AppCompatActivity() {
         /*
         * Clear (Short Press) - Deletes all edited text and resets the calculator to the start. History Stays
         * */
-        button_clear.setOnClickListener { text_edit = ""; inputUsed.isVisible = false; operatorLast = false; id_text.text = "0"}
+        button_clear.setOnClickListener { textEdit = ""; inputUsed.isVisible = false; operatorLast = false; idText.text = "0"}
 
         /*
         * Clear (Long Press) - Full Clear; Deletes all history, then resets back to the start
@@ -224,7 +224,7 @@ class BasicDiceCalculator : AppCompatActivity() {
             //
             history.clear()
             adapter.notifyDataSetChanged()
-            text_edit = ""; inputUsed.isVisible = false; operatorLast = false; id_text.text = "0"
+            textEdit = ""; inputUsed.isVisible = false; operatorLast = false; idText.text = "0"
             true
         }
 
@@ -235,23 +235,20 @@ class BasicDiceCalculator : AppCompatActivity() {
         button_enter.setOnClickListener {
 
             //Makes it so the te
-            if(operatorLast == true){
-                text_edit = text_edit.dropLast(3)
+            if(operatorLast){
+                textEdit = textEdit.dropLast(3)
             }
             operatorLast = false
 
             //Calculate result from dice calculation (See DiceCal.kt)
-            id_text.text = calculate(text_edit)
+            idText.text = calculate(textEdit)// ("2d6 / 3 + 1 x 2") //Testing Multiplication / Division. Only one works at a time TODO Fix That
 
-            //Create History
-
-            inputUsed.text = text_edit
+            //Show Input Used
+            inputUsed.text = textEdit
             inputUsed.isVisible = true
 
-
-
             //Add to History section
-            val historyItem = History(inputUsed.text.toString(),id_text.text.toString(), history.size+1)
+            val historyItem = History(inputUsed.text.toString(),idText.text.toString(), history.size+1)
             history.add(historyItem)
             adapter.notifyItemInserted(history.lastIndex) //Notify that new history item was created, show visually
 
