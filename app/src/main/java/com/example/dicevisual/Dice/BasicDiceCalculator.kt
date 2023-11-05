@@ -75,6 +75,12 @@ class BasicDiceCalculator : AppCompatActivity() {
         val button_clear = findViewById<Button>(R.id.btnid_clear)
         val button_enter = findViewById<Button>(R.id.btnid_enter)
 
+        //
+        val button_advantage = findViewById<Button>(R.id.btnid_adv)
+        val button_disadvantage = findViewById<Button>(R.id.btnid_dis)
+        val button_dropLow = findViewById<Button>(R.id.btnid_dl)
+        val button_dropHigh = findViewById<Button>(R.id.btnid_dh)
+
         //-----------------------------------------------------------------
         //Numerical Buttons
 
@@ -142,6 +148,104 @@ class BasicDiceCalculator : AppCompatActivity() {
 
         }
 
+
+        //---------------------------------------
+        /*
+        * Advantage: Rolls 2d20 and picks the better option.
+        * */
+
+        button_advantage.setOnClickListener {
+            //Check if you had a number or dice previously
+            if(!operatorLast){
+                //Remove it
+                val splitLast = textEdit.split(" ").last()
+                textEdit = textEdit.dropLast(splitLast.length)
+            }
+            //Add the Advantage Text and update the visable text
+            textEdit += "2d20dl"
+            idText.text = textEdit
+        }
+
+        //---------------------------------------
+        /*
+        * Disdvantage: Rolls 2d20 and picks the worse option.
+        * */
+
+        button_disadvantage.setOnClickListener {
+            //Check if you had a number or dice previously
+            if(!operatorLast){
+
+                //Remove it for this function
+                val splitLast = textEdit.split(" ").last()
+                textEdit = textEdit.dropLast(splitLast.length)
+            }
+
+            //Add the Disadvantage Text and update the visable text
+            textEdit += "2d20dh"
+            idText.text = textEdit
+        }
+
+        //---------------------------------------
+        /*
+        * Drop Lowest: Drops the lowest option when rolling dice.
+        * */
+
+        button_dropLow.setOnClickListener {
+            //Get the last element of the list Eg: 2d6 + 3d8 = 3d8
+            val splitLast = textEdit.split(" ").last()
+            //Check for proper formatting
+            if (textEdit.isEmpty() || operatorLast) {
+                //Nothing is there to use it
+                textEdit += "2d20"
+            } else if (!splitLast.contains('d')) {
+                //Is a Number
+                if(splitLast.toInt() <= 1){
+                    //Makes the number a minimum of "2"
+                    textEdit = textEdit.drop(1) + "2"
+                }
+
+                //Add a dice pattern for this to use (Default is d20)
+                textEdit += "d20"
+            } else if (splitLast.split('d').last() == ""){
+                //dice type is blank (Add Default)
+                textEdit += "20"
+            }
+
+            //Add the symbol and update visually
+            textEdit += "dl"
+            idText.text = textEdit
+        }
+
+        //---------------------------------------
+        /*
+        * Drop Highest: Drops the highest option when rolling dice.
+        * */
+
+        button_dropHigh.setOnClickListener {
+            //Get the last element of the list Eg: 2d6 + 3d8 = 3d8
+            val splitLast = textEdit.split(" ").last()
+            //Check for proper formatting
+            if (textEdit.isEmpty() || operatorLast) {
+                //Nothing is there to use it
+                textEdit += "2d20"
+            } else if (!splitLast.contains('d')) {
+                //Is a Number
+                if(splitLast.toInt() <= 1){
+                    //Makes the number a minimum of "2"
+                    textEdit = textEdit.drop(1) + "2"
+                }
+
+                //Add a dice pattern for this to use (Default is d20)
+                textEdit += "d20"
+            } else if (splitLast.split('d').last() == ""){
+                //dice type is blank (Add Default)
+                textEdit += "20"
+            }
+
+            //Add the symbol and update visually
+            textEdit += "dh"
+            idText.text = textEdit
+        }
 
         //--------------------------------------
         /*

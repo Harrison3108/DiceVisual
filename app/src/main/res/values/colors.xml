@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="dBackground">#202020</color>
-    <color name="dDiceMain">#97c041</color>
-    <color name="dDiceSub">#8eab7e</color>
+    <color name="dark_bg">#202020</color>
+    <color name="dark_bgAccent">#303030</color>
+    <color name="dark_primary">#97c041</color>
+    <color name="dark_accent">#9fe37b</color>
     <color name="dDiceText">#e7e7e7</color>
 
     <color name="black">#FF000000</color>

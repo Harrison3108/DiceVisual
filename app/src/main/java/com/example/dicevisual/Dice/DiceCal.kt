@@ -34,10 +34,16 @@ fun parseInput(input:String):String{
         } else if(i.contains("d")){
             //If a Dice
 
-            val split = i.splitToSequence("d")
+            val split = i.split("d")
 
+            var type : String?
+            if(split.size > 2){
+                type = split[2]
+            }else{
+                type = null
+            }
             //Add each dice roll in proper formatting
-            workingOut += "[" + rollDice(split.first().toInt(), split.last().toInt()) + "]"
+            workingOut += "[" + rollDice(split[0].toInt(), split[1].toInt(),type) + "]" //TODO Show DL or DH
 
         } else if(i.contains("+")){
             //If a "+"
@@ -76,6 +82,9 @@ fun parseInput(input:String):String{
 *         rather than the each individual dice rolled
 * */
 fun addDice(input:String):String{
+    //TODO Drop Lowest Option (For Advantage and Character Creation)
+    //TODO Drop Highest Option (For Disadvantage and other uses)
+
     var output = ""
     var diceTotal = 0
 
@@ -95,9 +104,13 @@ fun addDice(input:String):String{
             //Add all the rolls together
             if(!inputArray[i].contains('+')) {
                 //Add Number without Dice Symbols
-                diceTotal += inputArray[i].replace("[", "").replace("]", "").toInt()
+                val current = inputArray[i].replace("[", "").replace("]", "")
+                if (current.toIntOrNull() != null) {
+                    diceTotal += current.toInt()
+                } else {
+                    //TEST
+                }
             }
-
         }else{
             //Leave the input the same (No Dice Here)
 
@@ -143,7 +156,7 @@ fun multiplyAndDivide(input:String): String{
     var isMultiply = true //True = Multiply; False = Divide
     var afterOperation = false
 
-    var prevNum = 0.0
+    var prevNum : Double
 
     for(i in inputSplit.indices){
         if(inputSplit[i].contains('x')){
@@ -309,7 +322,7 @@ fun calculate(input:String):String{
 * RollDice - Rolls dice given in tabletop format
 *   (Dice Amount + 'd' + Faces of Dice Used; Eg: 1d6 is for rolling a normal dice)
 * */
-fun rollDice(amount:Int, face:Int): String {
+fun rollDice(amount:Int, face:Int, type:String?): String {
 
     var output = ""
 
@@ -322,6 +335,57 @@ fun rollDice(amount:Int, face:Int): String {
         if(i < amount){
             output += " + "
         }
+
+    }
+
+    //
+    if(type != null){
+        var split2 = output.split(" + ")
+        var dropHighNotLow = false
+
+        var dropPos = 0
+        var drop = split2[0].toInt()
+
+
+        //
+        if(type.contains("h")) {
+            dropHighNotLow = true
+
+        }else if(type.contains("l")){
+            dropHighNotLow = false
+        }
+
+        //XXX
+
+        for(i in split2.indices){
+            if(dropHighNotLow){
+                if(split2[i].toInt() > drop){
+                    dropPos = i
+                    drop = split2[i].toInt()
+                }
+            }else{
+                if(split2[i].toInt() < drop){
+                    dropPos = i
+                    drop = split2[i].toInt()
+                }
+            }
+
+        }
+
+        //XXX
+        //split2 = split2.drop(split2.indexOf(drop.toString()))   //takeWhile { split2.get(it.) it.toInt() == drop}
+        val finalDrop = drop
+        output = ""
+
+
+        for (i in split2.indices){
+            if(i != dropPos) {
+                output += split2[i] + " + "
+            }
+        }
+        output = output.dropLast(3)
+
+        output += " ($drop)"
 
     }
 

@@ -2,6 +2,12 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.DiceVisual" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
+        <item name="android:statusBarColor">@color/dark_primary</item>
+        <item name="android:textColor">#FFF</item>
+        <item name="android:colorBackground">@color/dark_bg</item>
+
+        <item name="colorPrimary">@color/dark_primary</item>
+        <item name="colorAccent">@color/dark_accent</item>
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
 </resources>

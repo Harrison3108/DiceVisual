@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="bottom"
-    android:background="@color/dBackground"
     android:nestedScrollingEnabled="false"
     tools:context=".MainActivity">
 
@@ -13,33 +12,28 @@
         android:id="@+id/card_history"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        app:cardBackgroundColor="@color/dark_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/card_buttons"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/card_result">
 
-        <ScrollView
-            android:id="@+id/svid_history"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvid_history"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/dBackground">
+            android:layout_gravity="bottom"
+            android:scrollIndicators="bottom"
+            android:scrollbarAlwaysDrawHorizontalTrack="false"
+            app:reverseLayout="true" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvid_history"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="bottom"
-                android:scrollIndicators="bottom"
-                android:scrollbarAlwaysDrawHorizontalTrack="false"
-                app:reverseLayout="true" />
-        </ScrollView>
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_result"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="#303030"
+        app:cardBackgroundColor="@color/dark_bgAccent"
         app:layout_constraintBottom_toTopOf="@+id/card_buttons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/card_history"
@@ -76,7 +70,7 @@
         android:id="@+id/card_buttons"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/dBackground"
+        app:cardBackgroundColor="@color/dark_bg"
         app:cardCornerRadius="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -91,12 +85,27 @@
                 android:gravity="center_horizontal">
 
                 <Button
+                    android:id="@+id/btnid_dis"
+                    android:layout_width="@dimen/const_button_size_Landscape"
+                    android:layout_height="@dimen/const_button_size_Landscape"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginRight="1dp"
+                    android:backgroundTint="@color/dark_accent"
+                    android:gravity="center"
+                    android:shadowColor="@color/black"
+                    android:shadowRadius="2"
+                    android:text="DIS"
+                    android:textColor="@color/dDiceText"
+                    android:textSize="12sp" />
+
+                <Button
                     android:id="@+id/btnid_7"
                     android:layout_width="@dimen/const_button_size_Landscape"
                     android:layout_height="@dimen/const_button_size_Landscape"
                     android:layout_marginLeft="1dp"
                     android:layout_marginRight="1dp"
-                    android:backgroundTint="@color/dDiceMain"
+                    android:backgroundTint="@color/dark_primary"
                     android:shadowColor="@color/black"
                     android:shadowRadius="2"
                     android:text="7"
@@ -110,7 +119,7 @@
                     android:layout_height="@dimen/const_button_size_Landscape"
                     android:layout_marginLeft="1dp"
                     android:layout_marginRight="1dp"
-                    android:backgroundTint="@color/dDiceMain"
+                    android:backgroundTint="@color/dark_primary"
                     android:shadowColor="@color/black"
                     android:shadowRadius="2"
                     android:text="8"
@@ -124,7 +133,7 @@
                     android:layout_height="@dimen/const_button_size_Landscape"
                     android:layout_marginLeft="1dp"
                     android:layout_marginRight="1dp"
-                    android:backgroundTint="@color/dDiceMain"
+                    android:backgroundTint="@color/dark_primary"
                     android:shadowColor="@color/black"
                     android:shadowRadius="2"
                     android:text="9"
@@ -138,7 +147,7 @@
                     android:layout_height="@dimen/const_button_size_Landscape"
                     android:layout_marginLeft="1dp"
                     android:layout_marginRight="1dp"
-                    android:backgroundTint="@color/dDiceSub"
+                    android:backgroundTint="@color/dark_accent"
                     android:shadowColor="@color/black"
                     android:shadowRadius="2"
                     android:text="⬅"
@@ -153,12 +162,27 @@
                 android:gravity="center_horizontal">
 
                 <Button
+                    android:id="@+id/btnid_adv"
+                    android:layout_width="@dimen/const_button_size_Landscape"
+                    android:layout_height="@dimen/const_button_size_Landscape"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginRight="1dp"
+                    android:backgroundTint="@color/dark_accent"
+                    android:gravity="center"
+                    android:shadowColor="@color/black"
+                    android:shadowRadius="2"
+                    android:text="ADV"
+                    android:textColor="@color/dDiceText"
+                    android:textSize="10sp" />
+
+                <Button
                     android:id="@+id/btnid_4"
                     android:layout_width="@dimen/const_button_size_Landscape"
                     android:layout_height="@dimen/const_button_size_Landscape"
                     android:layout_marginLeft="1dp"
                     android:layout_marginRight="1dp"
-                    android:backgroundTint="@color/dDiceMain"
+                    android:backgroundTint="@color/dark_primary"
                     android:shadowColor="@color/black"
                     android:shadowRadius="2"
                     android:text="4"
@@ -172,7 +196,7 @@
                     android:layout_height="@dimen/const_button_size_Landscape"
                     android:layout_marginLeft="1dp"
                     android:layout_marginRight="1dp"
-                    android:backgroundTint="@color/dDiceMain"
+                    android:backgroundTint="@color/dark_primary"
                     android:shadowColor="@color/black"
                     android:shadowRadius="2"
                     android:text="5"
@@ -186,7 +210,7 @@
                     android:layout_height="@dimen/const_button_size_Landscape"
                     android:layout_marginLeft="1dp"
                     android:layout_marginRight="1dp"
-                    android:backgroundTint="@color/dDiceMain"
+                    android:backgroundTint="@color/dark_primary"
                     android:shadowColor="@color/black"
                     android:shadowRadius="2"
                     android:text="6"
@@ -200,7 +224,7 @@
                     android:layout_height="@dimen/const_button_size_Landscape"
                     android:layout_marginLeft="1dp"
                     android:layout_marginRight="1dp"
-                    android:backgroundTint="@color/dDiceSub"
+                    android:backgroundTint="@color/dark_accent"
                     android:shadowColor="@color/black"
                     android:shadowRadius="2"
                     android:text="-"
@@ -216,12 +240,27 @@
                 android:gravity="center_horizontal">
 
                 <Button
+                    android:id="@+id/btnid_dl"
+                    android:layout_width="@dimen/const_button_size_Landscape"
+                    android:layout_height="@dimen/const_button_size_Landscape"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginRight="1dp"
+                    android:backgroundTint="@color/dark_accent"
+                    android:gravity="center"
+                    android:shadowColor="@color/black"
+                    android:shadowRadius="2"
+                    android:text="DL"
+                    android:textColor="@color/dDiceText"
+                    android:textSize="16sp" />
+
+                <Button
                     android:id="@+id/btnid_1"
                     android:layout_width="@dimen/const_button_size_Landscape"
                     android:layout_height="@dimen/const_button_size_Landscape"
                     android:layout_marginLeft="1dp"
                     android:layout_marginRight="1dp"
-                    android:backgroundTint="@color/dDiceMain"
+                    android:backgroundTint="@color/dark_primary"
                     android:shadowColor="@color/black"
                     android:shadowRadius="2"
                     android:text="1"
@@ -235,7 +274,7 @@
                     android:layout_height="@dimen/const_button_size_Landscape"
                     android:layout_marginLeft="1dp"
                     android:layout_marginRight="1dp"
-                    android:backgroundTint="@color/dDiceMain"
+                    android:backgroundTint="@color/dark_primary"
                     android:shadowColor="@color/black"
                     android:shadowRadius="2"
                     android:text="2"
@@ -249,7 +288,7 @@
                     android:layout_height="@dimen/const_button_size_Landscape"
                     android:layout_marginLeft="1dp"
                     android:layout_marginRight="1dp"
-                    android:backgroundTint="@color/dDiceMain"
+                    android:backgroundTint="@color/dark_primary"
                     android:shadowColor="@color/black"
                     android:shadowRadius="2"
                     android:text="3"
@@ -263,7 +302,7 @@
                     android:layout_height="@dimen/const_button_size_Landscape"
                     android:layout_marginLeft="1dp"
                     android:layout_marginRight="1dp"
-                    android:backgroundTint="@color/dDiceSub"
+                    android:backgroundTint="@color/dark_accent"
                     android:shadowColor="@color/black"
                     android:shadowRadius="2"
                     android:text="+"
@@ -278,12 +317,27 @@
                 android:gravity="center_horizontal">
 
                 <Button
+                    android:id="@+id/btnid_dh"
+                    android:layout_width="@dimen/const_button_size_Landscape"
+                    android:layout_height="@dimen/const_button_size_Landscape"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginRight="1dp"
+                    android:backgroundTint="@color/dark_accent"
+                    android:gravity="center"
+                    android:shadowColor="@color/black"
+                    android:shadowRadius="2"
+                    android:text="DH"
+                    android:textColor="@color/dDiceText"
+                    android:textSize="16sp" />
+
+                <Button
                     android:id="@+id/btnid_clear"
                     android:layout_width="@dimen/const_button_size_Landscape"
                     android:layout_height="@dimen/const_button_size_Landscape"
                     android:layout_marginLeft="1dp"
                     android:layout_marginRight="1dp"
-                    android:backgroundTint="@color/dDiceSub"
+                    android:backgroundTint="@color/dark_accent"
                     android:shadowColor="@color/black"
                     android:shadowRadius="2"
                     android:text="C"
@@ -297,7 +351,7 @@
                     android:layout_height="@dimen/const_button_size_Landscape"
                     android:layout_marginLeft="1dp"
                     android:layout_marginRight="1dp"
-                    android:backgroundTint="@color/dDiceMain"
+                    android:backgroundTint="@color/dark_primary"
                     android:shadowColor="@color/black"
                     android:shadowRadius="2"
                     android:text="0"
@@ -311,7 +365,7 @@
                     android:layout_height="@dimen/const_button_size_Landscape"
                     android:layout_marginLeft="1dp"
                     android:layout_marginRight="1dp"
-                    android:backgroundTint="@color/dDiceSub"
+                    android:backgroundTint="@color/dark_accent"
                     android:shadowColor="@color/black"
                     android:shadowRadius="2"
                     android:text="D"
@@ -325,7 +379,7 @@
                     android:layout_height="@dimen/const_button_size_Landscape"
                     android:layout_marginLeft="1dp"
                     android:layout_marginRight="1dp"
-                    android:backgroundTint="@color/dDiceSub"
+                    android:backgroundTint="@color/dark_accent"
                     android:shadowColor="@color/black"
                     android:shadowRadius="2"
                     android:text="="
