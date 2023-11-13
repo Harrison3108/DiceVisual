@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="dark_bg">#202020</color>
+    <!-- DARK COLOURS -->
+    <color name="dark_bg">#161716</color>
     <color name="dark_bgAccent">#303030</color>
     <color name="dark_primary">#97c041</color>
-    <color name="dark_accent">#9fe37b</color>
-    <color name="dDiceText">#e7e7e7</color>
+    <color name="dark_secondary">#8dc46f</color>
+    <color name="dark_accent">#3fbbe1</color>
+
+    <color name="dark_textColor">#e7e7e7</color>
+    <color name="dark_textShadow">#000000</color>
+
+    <!-- LIGHT COLOURS -->
+    <color name="light_bg">#fff3d2</color>
+    <color name="light_bgAccent">#ebe2c2</color>
+    <color name="light_primary">#97c041</color>
+    <color name="light_secondary">#8dc46f</color>
+    <color name="light_accent">#3fbbe1</color>
+
+    <color name="light_textColor">#161616</color>
+    <color name="light_textShadow">#FFF</color>
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>

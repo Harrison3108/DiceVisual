@@ -4,9 +4,27 @@ import kotlin.random.Random
 
 /*
 * DiceCal.kt - Contains all of the maths calculations after pressing the "=" Button
-* Last Edit: Oct 14 2023
+* Last Edit: Nov 8 2023
 * */
 
+//=========================================================
+//              FORMATTING INPUT
+//=========================================================
+/*
+* Table of Contents
+* XXX
+* */
+
+
+//=========================================================
+//              FORMATTING INPUT
+//=========================================================
+/**
+* Contains:
+ * parseInput: XXX
+ * addCommas: XXX
+ * limitNumbers: Limits the maximum amount of numbers to be used in this XXX
+* */
 
 /*
 * parseInput: Gives the correct spacing and Formatting for Dice Calculation
@@ -27,7 +45,7 @@ fun parseInput(input:String):String{
     for(i in inputList){
 
         //All Checks
-        if(i.toIntOrNull() != null){
+        if(i.toLongOrNull() != null){
             //If a normal number, add straight to output
             workingOut += i
 
@@ -43,7 +61,7 @@ fun parseInput(input:String):String{
                 type = null
             }
             //Add each dice roll in proper formatting
-            workingOut += "[" + rollDice(split[0].toInt(), split[1].toInt(),type) + "]" //TODO Show DL or DH
+            workingOut += "[" + rollDice(split[0].toLong(), split[1].toLong(),type) + "]" //TODO Show DL or DH
 
         } else if(i.contains("+")){
             //If a "+"
@@ -73,6 +91,146 @@ fun parseInput(input:String):String{
     return workingOut
 }
 
+//=========================================================================
+/*
+*   addCommas
+*   - Input:
+* */
+fun addCommas(input:String):String{
+    var output = ""
+    var split = input.replace(",","").split(" ")
+
+    for(i in split.indices){
+        //Format specific cases
+        if(split[i].contains("[0-9]".toRegex()) && !(split[i].contains('d') || split[i].contains('('))){
+            //Format regular numbers
+            output += split[i].reversed().chunked(3).joinToString(",").reversed()
+            //Using https://stackoverflow.com/questions/53206936/add-commas-or-point-every-3-digits-using-kotlin - William Da Silva
+        }else if(split[i].contains('d')){
+            //Format dice, XXX
+            output += addCommas(split[i].replace('d', ' ')).replace(' ', 'd')
+        }else{
+            output += " " + split[i] + " "
+        }
+    }
+
+
+    return output
+}
+
+//==============================================
+fun limitNumbers(input: String): String{
+    val numLimit = 10
+    var output = ""
+
+    var numberString = input.replace(",","")
+
+
+    if(numberString.length <= numLimit){
+        output = numberString
+    }else{
+        output = numberString.substring(0, numLimit)
+        //TODO play sound or some other feedback
+    }
+
+    return output
+}
+
+//=========================================================
+//                  DICE FUNCTIONS
+//=========================================================
+
+/**
+ * Contains:
+ *  rollDice(): Does the whole rolling dice thing (Without the brackets)
+ *  dropLowest(): Drop the LOWEST number
+ * */
+
+/*
+* RollDice - Rolls dice given in tabletop format
+*   (Dice Amount + 'd' + Faces of Dice Used; Eg: 1d6 is for rolling a normal dice)
+* */
+fun rollDice(amount:Long, face:Long, type:String?): String {
+
+    var output = ""
+
+    //-------------------------------------------
+    //Roll Dice Normally
+
+    //Loop for the amount of rolls necessary
+    for (i in 1..amount){
+        //Just adding the dice to the total string
+        output += Random.nextLong(1, face + 1)
+
+        //Format Correctly (Add + signs for all but last number)
+        if(i < amount){
+            output += " + "
+        }
+
+    }
+
+    //-------------------------------------------------------
+    //Drop either HIGHEST or LOWEST number from roll.
+    if(type != null){
+        var split2 = output.split(" + ")
+        var dropHighNotLow = false //Default: Drop Lowest Number
+
+        var dropPos = 0
+        var drop = split2[0].toLong()
+
+
+        // Determine which function to continue with
+        if(type.contains("h")) {
+            //Drop HIGHEST rolled number
+            dropHighNotLow = true
+        }else if(type.contains("l")){
+            //Drop LOWEST rolled number
+            dropHighNotLow = false
+        }else{
+            //Break the type forcefully, not an implemented option!
+            return output
+        }
+
+        //XXX
+
+        for(i in split2.indices){
+            if(dropHighNotLow){
+                //Drop Highest Code
+                if(split2[i].toLong() > split2[dropPos].toLong()){
+                    //If current number is HIGHER than the highest one available, switch it
+                    dropPos = i
+                }
+            }else{
+                //Drop Lowest Code
+                if(split2[i].toLong() < split2[dropPos].toLong()){
+                    //If current number is LOWER than the highest one available, switch it
+                    dropPos = i
+                }
+            }
+
+        }
+
+        output = ""
+
+
+        //Add all other numbers normally
+        for (i in split2.indices){
+            if(i != dropPos) {
+                output += split2[i] + " + "
+            }
+        }
+        //Drop last plus sign
+        output = output.dropLast(3)
+
+        //Add the dropped number (To show which number was dropped)
+        output += " ("+split2[dropPos]+")"
+
+    }
+
+    //Return Dice Number
+    return output
+}
+
 /*
 * addDice: Takes the formatted string from start, and adds all rolled dice together here.
 * Allows Multiplication to work by multiplying result. Same with Division
@@ -82,11 +240,9 @@ fun parseInput(input:String):String{
 *         rather than the each individual dice rolled
 * */
 fun addDice(input:String):String{
-    //TODO Drop Lowest Option (For Advantage and Character Creation)
-    //TODO Drop Highest Option (For Disadvantage and other uses)
 
     var output = ""
-    var diceTotal = 0
+    var diceTotal:Long = 0
 
     var isDice = false
 
@@ -105,23 +261,21 @@ fun addDice(input:String):String{
             if(!inputArray[i].contains('+')) {
                 //Add Number without Dice Symbols
                 val current = inputArray[i].replace("[", "").replace("]", "")
-                if (current.toIntOrNull() != null) {
-                    diceTotal += current.toInt()
-                } else {
-                    //TEST
+                if (current.toLongOrNull() != null) {
+                    diceTotal += current.toLong()
                 }
             }
         }else{
             //Leave the input the same (No Dice Here)
 
             //Check if Int or Operator
-            if(inputArray[i].toIntOrNull() != null){
+            if(inputArray[i].toLongOrNull() != null){
                 //Add without Spaces
                 output += inputArray[i]
             }else{
                 //Add WITH Spaces
                 output += " $inputArray[i] "
-                }
+            }
         }
 
         //Checks if you hit the last dice digit
@@ -167,7 +321,7 @@ fun multiplyAndDivide(input:String): String{
             //Prepare for Multiplication
             doOperation = true
             isMultiply = false
-        }else if(inputSplit[i].toIntOrNull() != null && doOperation){
+        }else if(inputSplit[i].toLongOrNull() != null && doOperation){
             //Do Calculation
 
             //Get Previous Number
@@ -264,9 +418,9 @@ fun multiplyAndDivide(input:String): String{
 *
 * Output: Final Result from the calculator
 * */
-fun addAndSubtract(input:String):Int{
+fun addAndSubtract(input:String):Long{
     var addNext = true
-    var result = 0
+    var result:Long = 0
     for(i in input.split(" ")){
         //Check if it is an Operator
         if(i.contains("+")){
@@ -277,15 +431,15 @@ fun addAndSubtract(input:String):Int{
             addNext = false
         }
         //Check if Number
-        else if(i.toIntOrNull() != null){
+        else if(i.toLongOrNull() != null){
 
             //Add or Subtract when ready
             if(addNext){
                 // Add to Result
-                result += i.toInt()
+                result += i.toLong()
             }else{
                 // Minus from Result
-                result -= i.toInt()
+                result -= i.toLong()
             }
         }
     }
@@ -311,84 +465,7 @@ fun calculate(input:String):String{
     val result = addAndSubtract(addDice(formattedInput)) //TODO Add multiplyAndDivide when working
 
     //Return Formatted Output
-    return "$result: $formattedInput"
+    //return "$result: $formattedInput"
+    return addCommas(result.toString()) +": " + addCommas(formattedInput)
 
-}
-
-//==================================================
-// Dice Functions
-
-/*
-* RollDice - Rolls dice given in tabletop format
-*   (Dice Amount + 'd' + Faces of Dice Used; Eg: 1d6 is for rolling a normal dice)
-* */
-fun rollDice(amount:Int, face:Int, type:String?): String {
-
-    var output = ""
-
-    //Loop for the amount of rolls necessary
-    for (i in 1..amount){
-        //Just adding the dice to the total string
-        output += Random.nextInt(1, face+1)
-
-        //Format Correctly (Add + signs for all but last number)
-        if(i < amount){
-            output += " + "
-        }
-
-    }
-
-    //
-    if(type != null){
-        var split2 = output.split(" + ")
-        var dropHighNotLow = false
-
-        var dropPos = 0
-        var drop = split2[0].toInt()
-
-
-        //
-        if(type.contains("h")) {
-            dropHighNotLow = true
-
-        }else if(type.contains("l")){
-            dropHighNotLow = false
-        }
-
-        //XXX
-
-        for(i in split2.indices){
-            if(dropHighNotLow){
-                if(split2[i].toInt() > drop){
-                    dropPos = i
-                    drop = split2[i].toInt()
-                }
-            }else{
-                if(split2[i].toInt() < drop){
-                    dropPos = i
-                    drop = split2[i].toInt()
-                }
-            }
-
-        }
-
-        //XXX
-        //split2 = split2.drop(split2.indexOf(drop.toString()))   //takeWhile { split2.get(it.) it.toInt() == drop}
-        val finalDrop = drop
-        output = ""
-
-
-        for (i in split2.indices){
-            if(i != dropPos) {
-                output += split2[i] + " + "
-            }
-        }
-        output = output.dropLast(3)
-
-        output += " ($drop)"
-
-    }
-
-    //Return Dice Number
-    return output
 }

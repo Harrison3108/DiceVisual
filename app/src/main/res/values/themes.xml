@@ -3,6 +3,17 @@
     <style name="Base.Theme.DiceVisual" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:statusBarColor">@color/light_primary</item>
+        <item name="android:textColor">@color/light_textColor</item>
+        <item name="textFillColor">@color/light_textColor</item>
+        <item name="android:shadowColor">@color/light_textShadow</item>
+
+        <item name="android:colorBackground">@color/light_bg</item>
+
+        <item name="colorPrimary">@color/light_primary</item>
+        <item name="colorSecondary">@color/light_secondary</item>
+        <item name="colorAccent">@color/light_accent</item>
+        <item name="backgroundColor">@color/light_bgAccent</item>
     </style>
 
     <style name="Theme.DiceVisual" parent="Base.Theme.DiceVisual" />

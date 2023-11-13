@@ -86,8 +86,57 @@ class BasicDiceCalculator : AppCompatActivity() {
 
         //Simplify Button Clicks involving numbers
         fun buttonClick (buttonNum: String){
+
+            if(textEdit.contains(' ')){
+                //Last input is a number
+                var last = textEdit.split(' ').last()
+                textEdit = textEdit.dropLast(last.length)
+
+                //Check if Dice
+                if(last.contains('d',)){
+
+                    val lastDice = last.split('d')
+
+                    //Already formatted correctly
+                    textEdit += lastDice[0] + 'd'
+
+                    //Last Character
+                    if (lastDice.last().contains('l') || lastDice.last().contains('h')){
+                        //Add " + " to the original, then the number
+                        textEdit += lastDice[1] + "d" + lastDice.last() + " + $buttonNum"
+                    }else{
+                        //Check if you reached the limit, then adds commas to result
+                        textEdit += addCommas(limitNumbers(lastDice.last() + buttonNum))
+                    }
+
+                }else {
+                    textEdit += addCommas(limitNumbers(last + buttonNum))
+                }
+
+
+            }else if(!textEdit.contains(' ')){
+                //Only contains the number
+                if(textEdit == ""){
+                    textEdit += buttonNum
+                }else if(textEdit.contains('d')){
+                    val lastDice = textEdit.split('d')
+                    //Already formatted correctly
+                    textEdit = lastDice[0] + 'd'
+
+                    //Last Character
+                    if (lastDice.last().contains('l') || lastDice.last().contains('h')){
+                        //Add " + " to the original, then the number
+                        textEdit += lastDice[1] + "d" + lastDice.last() + " + $buttonNum"
+                    }else{
+                        //Check if you reached the limit, then adds commas to result
+                        textEdit += addCommas(limitNumbers(lastDice.last() + buttonNum))
+                    }
+                }else {
+                    textEdit = addCommas(limitNumbers(textEdit + buttonNum))
+                }
+            }
+
             //Add Text to calculation and update shown text
-            textEdit += buttonNum
             idText.text = textEdit
 
             //Tell that it is not an operator (For Back and Math Operator purposes)
@@ -126,6 +175,11 @@ class BasicDiceCalculator : AppCompatActivity() {
 
             //If there is text to remove
             if(textEdit.length > 1){
+
+                if(textEdit.last().equals('l') || textEdit.last().equals('h')){
+                    textEdit = textEdit.dropLast(1)
+
+                }
 
                 //Drop last number
                 textEdit = textEdit.dropLast(1)
@@ -345,7 +399,7 @@ class BasicDiceCalculator : AppCompatActivity() {
             operatorLast = false
 
             //Calculate result from dice calculation (See DiceCal.kt)
-            idText.text = calculate(textEdit)// ("2d6 / 3 + 1 x 2") //Testing Multiplication / Division. Only one works at a time TODO Fix That
+            idText.text = calculate(textEdit.replace(",",""))// ("2d6 / 3 + 1 x 2") //Testing Multiplication / Division. Only one works at a time TODO Fix That
 
             //Show Input Used
             inputUsed.text = textEdit
